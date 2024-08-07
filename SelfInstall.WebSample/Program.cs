@@ -22,4 +22,3 @@ if (didInstallationProcess)
 
 app.MapControllers();
 app.Run("http://localhost:1991");
-// http://localhost:1991/WeatherForecast

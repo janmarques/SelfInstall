@@ -2,12 +2,10 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<Nullable>disable</Nullable>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/janmarques/SelfInstall</PackageProjectUrl>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Include="readme.md" Pack="true" PackagePath="\" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
 	</ItemGroup>
 </Project>
