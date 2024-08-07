@@ -12,9 +12,10 @@ public static class Extensions
 {
     private static SelfInstallOptions _options;
 
-    public static void ConfigureSelfInstall(this IHostApplicationBuilder builder, SelfInstallOptions options)
+    public static void ConfigureSelfInstall(this IHostApplicationBuilder builder, SelfInstallOptions options = null) 
     {
-        _options = options;
+        builder.Services.AddWindowsService();
+        _options = options ?? new SelfInstallOptions();
     }
 
     /// <summary>
@@ -25,10 +26,10 @@ public static class Extensions
     /// <param name="host"></param>
     /// <param name="args"></param>
     /// <returns></returns>
-    public static async Task<bool> RunSelfInstall(this IHost host, string[] args)
+    public static async Task<bool> RunSelfInstall(this IHost host, string[] args = null)
     {
-        var firstArg = args.FirstOrDefault();
-        var name = _options.ServiceName;
+        var firstArg = args?.FirstOrDefault();
+        var name = _options.ServiceName ?? Process.GetCurrentProcess().ProcessName;
         async Task Stop() => await PowerShell($"net stop {name}");
         async Task Delete() => await PowerShell($"sc.exe delete {name}");
 
@@ -74,7 +75,7 @@ public static class Extensions
             return true;
         }
 
-        if (firstArg != _options.RunLocalArg)
+        if (firstArg == _options.RunLocalArg)
         {
             await Stop();
         }
@@ -84,8 +85,8 @@ public static class Extensions
 
     private static void CopyFile(string serviceCopyTargetPath, string runningExe)
     {
-        File.Delete(serviceCopyTargetPath);
         Directory.CreateDirectory(Path.GetDirectoryName(serviceCopyTargetPath));
+        File.Delete(serviceCopyTargetPath);
         File.Copy(runningExe, serviceCopyTargetPath);
     }
 
@@ -113,6 +114,7 @@ public class SelfInstallOptions
 {
     /// <summary>
     /// If true, the service will be installed.
+    /// Don't just set this always to true, or otherwise the exe will try to install itself while already installed as a service.
     /// Defaults to Environment.UserInteractive
     /// </summary>
     public bool ShouldInstall { get; set; } = Environment.UserInteractive;
