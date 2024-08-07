@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "Laptiming": {
+      "commandName": "Project",
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AppConfig__ChromePrintInstances": "1"
+      },
+      "commandLineArgs": "local",
+      "applicationUrl": "http://localhost:8085",
+      "dotnetRunMessages": true
+    }
+  }
+}
