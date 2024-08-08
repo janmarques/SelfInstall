@@ -12,7 +12,7 @@ public static class Extensions
 {
     private static SelfInstallOptions _options;
 
-    public static void ConfigureSelfInstall(this IHostApplicationBuilder builder, SelfInstallOptions options = null) 
+    public static void ConfigureSelfInstall(this IHostApplicationBuilder builder, SelfInstallOptions options = null)
     {
         builder.Services.AddWindowsService();
         _options = options ?? new SelfInstallOptions();
@@ -66,8 +66,10 @@ public static class Extensions
                     Console.WriteLine($"Type the Windows password for user {username} and press enter");
                     password = Console.ReadLine();
                 }
-
-                await PowerShell(@$"sc.exe config Laptiming obj= ""{username}"" password= ""{password}""");
+                if (!(string.IsNullOrEmpty(password) && _options.ShouldFallbackToLocalSystemWithoutPromptedPassword))
+                {
+                    await PowerShell(@$"sc.exe config {name} obj= ""{username}"" password= ""{password}""");
+                }
             }
 
             await PowerShell($"net start {name}");
@@ -132,6 +134,11 @@ public class SelfInstallOptions
     /// When runnning as LocalSystem, no password is needed.
     /// </summary>
     public bool ShouldPromptForUserPassword { get; set; } = false;
+    /// <summary>
+    /// When <see cref="ShouldPromptForUserPassword">ShouldPromptForUserPassword</see> is set to true, and the user does not fill the prompted password, fallback to the LocalSystem user (without password).
+    /// Defaults to false
+    /// </summary>
+    public bool ShouldFallbackToLocalSystemWithoutPromptedPassword { get; set; } = false;
     /// <summary>
     /// User that runs the service. Should be a full domain user name (eg company\admin123). Requires a password via <see cref="Password">Password</see>
     /// </summary>

@@ -9,7 +9,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "commandLineArgs": "local" // Uncomment to run locally
+      //"commandLineArgs": "local" // Uncomment to run locally
     }
   }
 }

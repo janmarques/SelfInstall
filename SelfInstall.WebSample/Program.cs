@@ -7,9 +7,11 @@ builder.Services.AddControllers();
 
 builder.ConfigureSelfInstall(new SelfInstallOptions
 {
-    User = SelfInstallOptions.UserEnum.LocalSystem,
-    PreInstallHook = _ => Console.WriteLine("Installing"), 
-    //ServiceCopyTargetPath = @"c:\temp\webservice.exe"
+    User = SelfInstallOptions.UserEnum.CurrentUser,
+    ShouldPromptForUserPassword = true,
+    ShouldFallbackToLocalSystemWithoutPromptedPassword = true,
+    PreInstallHook = _ => Console.WriteLine("Installing"),
+    ServiceCopyTargetPath = @"c:\temp\webservice.exe"
 });
 
 var app = builder.Build();
